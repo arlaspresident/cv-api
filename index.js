@@ -96,6 +96,25 @@ app.put('/api/workexperience/:id', (req, res) => {
     });
 });
 
+app.delete('/api/workexperience/:id', (req, res) => {
+    console.log('DELETE /api/workexperience anropad');
+
+    const { id } = req.params;
+
+    const sql = 'DELETE FROM workexperience WHERE id = ?';
+
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Fel vid borttagning:', err);
+            res.status(500).json({ error: 'kunde inte ta bort posten' });
+        } else if (result.affectedRows === 0) {
+            res.status(404).json({ error: 'ingen post hittades med angivet ID' });
+        } else {
+            res.status(200).json({ message: 'erfarenhet borttagen' });
+        }
+    });
+});
+
 
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
