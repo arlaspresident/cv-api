@@ -67,6 +67,35 @@ app.post('/api/workexperience', (req, res) => {
     });
 });
 
+app.put('/api/workexperience/:id', (req, res) => {
+    console.log('PUT /api/workexperience anropad');
+
+    const { id } = req.params;
+    const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
+
+    if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
+        return res.status(400).json({ error: 'alla fält måste fyllas i' });
+    }
+
+    const sql = `
+        UPDATE workexperience 
+        SET companyname = ?, jobtitle = ?, location = ?, startdate = ?, enddate = ?, description = ? 
+        WHERE id = ?
+    `;
+    const values = [companyname, jobtitle, location, startdate, enddate, description, id];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('fel vid update:', err);
+            res.status(500).json({ error: 'kunde inte uppdatera erfarenhet' });
+        } else if (result.affectedRows === 0) {
+            res.status(404).json({ error: 'ingen post med angivet ID' });
+        } else {
+            res.status(200).json({ message: 'erfarenhet uppdaterad' });
+        }
+    });
+});
+
 
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
