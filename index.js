@@ -43,11 +43,35 @@ app.get('/api/workexperience', (req, res) => {
     });
 });
 
+app.post('/api/workexperience', (req, res) => {
+    const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
 
-app.listen(port, () => {
-    console.log(`servern kör på http://localhost:${port}`);
+    if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
+        return res.status(400).json({ error: 'Alla fält måste fyllas i' });
+    }
+
+    const sql = `
+        INSERT INTO workexperience 
+        (companyname, jobtitle, location, startdate, enddate, description) 
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    const values = [companyname, jobtitle, location, startdate, enddate, description];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('fel vid insert:', err);
+            res.status(500).json({ error: 'kunde ej spara till databasen' });
+        } else {
+            res.status(201).json({ message: 'erfarenhet tillagd', id: result.insertId });
+        }
+    });
 });
+
 
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
+});
+
+app.listen(port, () => {
+    console.log(`servern kör på http://localhost:${port}`);
 });
