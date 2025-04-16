@@ -27,7 +27,7 @@ fält:
 
 1. klona projektet
 
-git clone https://github.com/ditt-användarnamn/cv-api.git cd cv-api
+git clone https://github.com/arlaspresident/cv-api.git cd cv-api
 
 2. installera beroenden
 
