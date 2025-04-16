@@ -9,6 +9,7 @@ const port = 3000;
 app.use(express.json()); 
 app.use(cors()); 
 
+//skapar anslutning till databasen med värden från .env
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -17,6 +18,7 @@ const db = mysql.createConnection({
     port: process.env.DB_PORT
 });
 
+//försöker ansluta till databasen och loggar resultat
 db.connect(err => {
     if (err) {
         console.error('databasanslutning failade:', err);
@@ -29,6 +31,7 @@ app.get('/', (req, res) => {
     res.send('välkommen till mitt cv api');
 });
 
+//hämtar alla arbetserfarenhter 
 app.get('/api/workexperience', (req, res) => {
     console.log('GET /api/workexperience anropad');
     const sql = 'SELECT * FROM workexperience';
@@ -43,9 +46,11 @@ app.get('/api/workexperience', (req, res) => {
     });
 });
 
+//lägg till en ny arbetserfarenhet 
 app.post('/api/workexperience', (req, res) => {
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
 
+    //enkel validering, inga tomma fält tillåts
     if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
         return res.status(400).json({ error: 'Alla fält måste fyllas i' });
     }
@@ -67,12 +72,14 @@ app.post('/api/workexperience', (req, res) => {
     });
 });
 
+//uppdatera en befintlig arbetserfarenhet
 app.put('/api/workexperience/:id', (req, res) => {
     console.log('PUT /api/workexperience anropad');
 
     const { id } = req.params;
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
 
+    //validering, alla fält krävs
     if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
         return res.status(400).json({ error: 'alla fält måste fyllas i' });
     }
@@ -96,6 +103,7 @@ app.put('/api/workexperience/:id', (req, res) => {
     });
 });
 
+//ta bort en arbetserfarenhet
 app.delete('/api/workexperience/:id', (req, res) => {
     console.log('DELETE /api/workexperience anropad');
 
@@ -115,11 +123,12 @@ app.delete('/api/workexperience/:id', (req, res) => {
     });
 });
 
-
+//om ingen route matchar returnera 404
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
 });
 
+//startar servern på port 3000
 app.listen(port, () => {
     console.log(`servern kör på http://localhost:${port}`);
 });
