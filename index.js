@@ -20,6 +20,25 @@ db.connect(err => {
         console.log('ansluten till databasen');
     }
 });
+const initSql = `
+  CREATE TABLE IF NOT EXISTS workexperience (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    companyname VARCHAR(70) NOT NULL,
+    jobtitle VARCHAR(60) NOT NULL,
+    location VARCHAR(50) NOT NULL,
+    startdate DATE NOT NULL,
+    enddate DATE NOT NULL,
+    description TEXT NOT NULL
+  );
+`;
+
+db.query(initSql, (err) => {
+  if (err) {
+    console.error('kunde inte skapa tabell:', err);
+  } else {
+    console.log('tabell workexperience är klar');
+  }
+});
 
 app.get('/', (req, res) => {
     res.send('välkommen till mitt cv api');
