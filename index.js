@@ -10,13 +10,7 @@ app.use(express.json());
 app.use(cors()); 
 
 //skapar anslutning till databasen med värden från .env
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT
-});
+const db = mysql.createConnection(process.env.MYSQL_URL);
 
 //försöker ansluta till databasen och loggar resultat
 db.connect(err => {
