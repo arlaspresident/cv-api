@@ -1,5 +1,8 @@
 # cv api
 
+## livelänk
+https://cv-api-production-14be.up.railway.app/api/workexperience
+
 detta är en rest baserad webbtjänst som hanterar arbetserfarenheter. api:t är byggt med node.js, express och mysql och innehåller fullständig crud funktionalitet.
 
 ## teknik
