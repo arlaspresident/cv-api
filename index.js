@@ -9,17 +9,18 @@ const port = 3000;
 app.use(express.json()); 
 app.use(cors()); 
 
-//skapar anslutning till databasen med värden från .env
-const db = mysql.createConnection(process.env.MYSQL_URL);
-
-//försöker ansluta till databasen och loggar resultat
-db.connect(err => {
-    if (err) {
-        console.error('databasanslutning failade:', err);
-    } else {
-        console.log('ansluten till databasen');
-    }
+// skapa anslutning via connection pool
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
+
 const initSql = `
   CREATE TABLE IF NOT EXISTS workexperience (
     id INT AUTO_INCREMENT PRIMARY KEY,
